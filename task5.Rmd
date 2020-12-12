@@ -1,0 +1,119 @@
+---
+title: "task5"
+author: "Anderson Monken"
+date: "10/23/2020"
+output:
+  html_document: default
+---
+
+```{r setup, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+library(pacman)
+p_load(tidyverse)
+p_load(ggthemes)
+p_load(lubridate)
+
+# read in data
+accounts_data <- read_csv('data/accounts_analytical.csv')
+transactions_data <- read_csv('data/transactions.csv')
+
+# make number of credit card transactions per account
+account_num_cc_transactions <- transactions_data %>% filter(method == 'credit card') %>% group_by(account_id) %>% count() %>% rename(n_transactions = n)
+
+# get the number of transactions and number of cards together into the right format
+cc_num_trans <- accounts_data %>% select(account_id, credit_cards) %>% 
+  left_join(account_num_cc_transactions) %>% 
+  mutate(credit_cards = replace_na(credit_cards,0),
+         cc_dummy = if_else(credit_cards > 0, TRUE, FALSE),
+         n_transactions = replace_na(n_transactions,0))
+```
+
+
+Since we want to understand how credit card product affects transactions, we need to compare the two distributions. The first plot shows the distribution of the account-level number of credit card transactions faceted by whether the account has a credit card or not. Interestingly, there are numerous instances of accounts with credit card transactions who do not have credit card accounts.
+
+```{r}
+ggplot(cc_num_trans, aes(fill = cc_dummy,
+                         x = n_transactions)) +
+         geom_histogram(bins = 10) + 
+  # remove legend
+  guides(fill = FALSE) + 
+  # theme
+  theme_tufte() + 
+  # labels
+  labs(title = "Faceted histogram of credit card transactions per account",
+       x = "Number of Credit Card Transactions",
+       y = "Count",
+       fill = "Account Type") +
+  facet_wrap(~cc_dummy,scales = 'free_y',
+             labeller = labeller(cc_dummy = as_labeller(c('TRUE' = 'Accounts with Credit Card',
+                                                          'FALSE' = 'Accounts without Credit Card')
+                                 ))
+  )
+```
+
+
+One of the next variables to consider is if those transactions occurred at a particular time or if it is evenly spread out. The next plot shows a bar plot of monthly number of transactions from these suspicious accounts.
+
+```{r}
+# get the accounts numbers that have transactions and no card
+accounts_cc_no_card <- cc_num_trans %>% 
+  filter(n_transactions > 0, cc_dummy == FALSE) %>% 
+  select(account_id)
+
+# get the transactions for those suspicious account numbers
+# and aggregate to the monthly frequency
+trans_cc_no_card <- accounts_cc_no_card %>% 
+  left_join(transactions_data) %>% 
+  filter(method == 'credit card') %>%
+  group_by(year(date), month(date)) %>%
+  summarize(count_trans = n(), date = mean(date))
+
+# bar plot
+ggplot(trans_cc_no_card,
+       aes(x = date,
+           y = count_trans)) +
+  geom_col() +
+ # remove legend
+  guides(color = FALSE) +
+ # labels
+  labs(title = "Time series plot of number of credit card transactions\nby month for accounts without credit cards",
+       x = NULL,
+       y = "Number of Credit Card Transactions in a Month") +
+  # theme
+  theme_tufte()
+
+```
+
+The final plot considers if the lack of credit cards listed on the account depend on the average balance of the account holder. Perhaps there is fraud being perpetrated against clients with higher balances. There a difference in the average balance for suspicious activity.
+
+```{r}
+cc_num_trans_suspicious <- cc_num_trans %>% mutate(suspicious = if_else(cc_dummy == FALSE & n_transactions > 0, TRUE, FALSE))
+
+# get average balance for all accounts
+mean_bal <- transactions_data %>% 
+  group_by(account_id) %>% 
+  summarize(avg_balance = mean(balance))
+
+# join average balance data to main accounts data
+cc_num_trans_suspicious <- cc_num_trans_suspicious %>% 
+  left_join(mean_bal, by = 'account_id') 
+
+# violin plot
+ggplot(cc_num_trans_suspicious,
+       aes(x = suspicious,
+           y = avg_balance,
+           fill = suspicious)) +
+  geom_violin() +
+  geom_boxplot(width=0.1) +
+  # remove legend
+  guides(fill = FALSE) +
+  # labels
+  labs(title = "Violin plot of average account balance\nsplit on suspicious activity",
+       x = "Accounts with unexplained credit card transactions",
+       y = "Average Account Balance") +
+  # theme
+  theme_tufte()
+  
+
+```

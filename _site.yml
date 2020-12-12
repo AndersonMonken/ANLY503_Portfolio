@@ -1,12 +1,41 @@
 name: "my-website"
 output_dir: "docs"
 navbar:
-  title: "My Website"
+  title: "Anderson Monken ANLY503 Portfolio"
   left:
     - text: "Home"
+      icon: fa-home
       href: index.html
     - text: "About"
+      icon: fa-info
       href: about.html
+    - text: "Course Assignments"
+      menu:
+      - text: "Data Wrangling Assignment"
+        menu: 
+        - text: ""
+      - text: "Exploratory Data Analysis Assignment"
+        menu:
+        - text: "Task 1"
+          href: task1.html
+        - text: "Task 2"
+          href: task2.html
+        - text: "Task 3"
+          href: task3.html
+        - text: "Task 4"
+          href: task4.html
+        - text: "Task 5"
+          href: task5.html
+      - text: "Choropleth Assignment"
+        href: geospatial.html
+      - text: "Network Assignment"
+        href: network.html
+    - text: "Final Project"
+      href: project.html
+  right:
+    - text: "Github"
+      href: https://github.com/AndersonMonken/ANLY503_Portfolio
+      
 output:
   html_document:
     theme: cosmo

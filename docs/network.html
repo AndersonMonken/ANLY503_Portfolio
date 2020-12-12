@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Anderson Monken" />
+
+
+<title>Assignment 7</title>
+
+<script src="site_libs/header-attrs-2.4.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Anderson Monken ANLY503 Portfolio</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+    About
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Course Assignments
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data Wrangling Assignment</a>
+      <ul class="dropdown-menu" role="menu">
+        <li class="dropdown-header"></li>
+      </ul>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploratory Data Analysis Assignment</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="task1.html">Task 1</a>
+        </li>
+        <li>
+          <a href="task2.html">Task 2</a>
+        </li>
+        <li>
+          <a href="task3.html">Task 3</a>
+        </li>
+        <li>
+          <a href="task4.html">Task 4</a>
+        </li>
+        <li>
+          <a href="task5.html">Task 5</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="geospatial.html">Choropleth Assignment</a>
+    </li>
+    <li>
+      <a href="network.html">Network Assignment</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="project.html">Final Project</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AndersonMonken/ANLY503_Portfolio">Github</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Assignment 7</h1>
+<h4 class="author">Anderson Monken</h4>
+<h4 class="date">11/7/2020</h4>
+
+</div>
+
+
+<div id="using-python-to-process-the-raw-data" class="section level4">
+<h4>Using Python to process the raw data</h4>
+<p>This code is written as a function so that we can use R to pass in variables, which makes the processing dynamic to the states and the number of connections you want to have in your network graph output</p>
+<pre class="python"><code>import pandas as pd
+
+def process_data(source_states = [&#39;Texas&#39;,&#39;New York&#39;,&#39;Florida&#39;,&#39;California&#39;], num_largest = 10, debug = False):
+    
+    df_raw = pd.read_excel(&#39;data/State_to_State_Migrations_Table_2018.xls&#39;)
+    
+    data_pull_list = []
+    
+    for row_i in range(8, 79): # loop through each 3row, this represents each jurisdiction of current residence
+        
+        current_residence = df_raw.iloc[row_i, 0]
+        
+        if not pd.isna(current_residence): # if there is no location here then it is a blank row
+            
+            # walk through each column, representing different features about the current state
+            for col_i in range(2, df_raw.shape[1]): 
+                
+                val = df_raw.iloc[row_i, col_i] # pull the value for that column and row
+                
+                # if the value is empty or not an integer then move on
+                # this is to avoid the repeats of row names that makes it easier to look at the table in excel
+                if pd.isna(val) or not isinstance(val, int): 
+                    continue
+                
+                # get the state of the different residence from the column headers
+                diff_residence_name = df_raw.iloc[5, col_i]
+                # the merged cells get separated when reading into pandas
+                # so we need to check the right cell, if it is blank then the left cell
+                if pd.isna(diff_residence_name): 
+                    diff_residence_name = df_raw.iloc[5, col_i - 1]
+                
+                # the variable we are getting data about
+                # start by looking at the highest row in the same column
+                # if it is empty step left until you find the variable name
+                i = 0
+                variable_name = df_raw.iloc[4, col_i - i]
+                while pd.isna(variable_name):
+                    i += 1
+                    variable_name = df_raw.iloc[4, col_i - i]
+                
+                # replace instances of (continued) with nothing so variable name is consistent
+                variable_name = variable_name.replace(&#39; (continued)&#39;, &#39;&#39;)
+    
+                # second half of variable name - estimate or margin of error
+                var_name_type = df_raw.iloc[6, col_i] 
+                
+                if debug == True:
+                    print(variable_name, current_residence, diff_residence_name, var_name_type, val)
+                
+                data_pull_list.append({&#39;current_residence&#39; : current_residence,
+                                       &#39;prev_residence&#39; : diff_residence_name,
+                                       &#39;variable&#39; : variable_name,
+                                       &#39;variable_type&#39; : var_name_type,
+                                       &#39;value&#39; : val})
+    
+    # turn the list of dictionaries into pandas dataframe
+    df = pd.DataFrame(data_pull_list)
+    # remove extra 2 from current residence variable
+    df[&#39;current_residence&#39;] = df[&#39;current_residence&#39;].str.replace(&#39;2&#39;,&#39;&#39;)
+    
+    # filter the data down to the elements we care about
+    df_trim = df[df.variable_type == &#39;Estimate&#39;]
+    df_trim = df_trim[df_trim.variable == &#39;Different state of residence 1 year ago&#39;]
+    df_trim = df_trim[df_trim.current_residence != &#39;United States&#39;]
+    df_trim = df_trim[df_trim.current_residence != &#39;Puerto Rico&#39;]
+    
+    # trim to only previous states that are specified in the function
+    df_trim = df_trim[df_trim.prev_residence.isin(source_states)]
+    
+    # the most important function
+    df_network = (df_trim 
+        .set_index(&#39;current_residence&#39;) # set index for the variable we want to keep
+        .groupby(&#39;prev_residence&#39;)[&#39;value&#39;] # group by and select column to filter on
+        .nlargest(int(num_largest)) # choose only the largest values
+        .reset_index()) # reset index so everything is a column again
+    
+    # set the columns according to instructions
+    df_network.columns = [&#39;source&#39;,&#39;target&#39;,&#39;count&#39;]
+    
+    return df_network</code></pre>
+</div>
+<div id="r-data-prep" class="section level4">
+<h4>R data prep</h4>
+<p>R can now run the python function and get the the data into a graph object. I chose the two critical battleground states of Georgia and Pennsylvania in addition to Texas and New York.</p>
+<pre class="r"><code># run python function and specify states and number of states to get back
+# then add source node variable for edge coloring
+df &lt;- py$process_data(source_states = c(&#39;Texas&#39;,&#39;New York&#39;,&#39;Pennsylvania&#39;,&#39;Georgia&#39;), 
+                      num_largest = 10) %&gt;% 
+    mutate(source_node = as.factor(source))
+
+# create node list
+nodes &lt;- c(df$source, df$target) %&gt;% unique()
+
+# make graph object using tidygraph
+graph_df &lt;- as_tbl_graph(df, directed = TRUE, vertices = nodes)</code></pre>
+</div>
+<div id="creating-the-network-graph" class="section level3">
+<h3>Creating the network graph</h3>
+<p>Using the ggraph package makes it easy to add attributes to edges and nodes to make a professional graph network visualization</p>
+<pre class="r"><code>set.seed(123462)
+
+# start graph and establish layout
+ggraph(graph_df, layout = &#39;fr&#39;) +
+    
+    # add edges with width, color aesthetic attributes plus other static ones
+    geom_edge_arc(aes(width = count, 
+                       color = source_node),
+                   arrow = arrow(type = &quot;closed&quot;, length = unit(4, &#39;mm&#39;)),
+                   alpha = 0.5,
+                   strength = 0.4) + 
+    
+    # add node point and text
+    geom_node_point() +
+    geom_node_text(aes(label = name), repel = TRUE) +
+    
+    # name width variable on legend
+    scale_edge_width(name = &#39;Number of People&#39;) +
+    # name color variable on legend
+    scale_edge_color_discrete(name = &#39;Origin State&#39;) +
+    
+    # graph title
+    ggtitle(&#39;Network graph of top 10 states\npeople are moving to from selected origin states&#39;) +
+
+    # remove panel background and adjust title
+    theme(panel.background = element_blank(),
+          plot.title = element_text(hjust = 0.5))</code></pre>
+<p><img src="network_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
+<p>We see from the graph that California, Florida, and North Carolina are all popular destinations from all four of the origin states that we considered. Strong geographic closeness leads to more migration. New Jersey and Pennsylvania are two of the top destinations for former New York residents. Each origin state sends to a number of smaller states without significant overlap.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

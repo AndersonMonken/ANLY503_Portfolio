@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Anderson Monken" />
+
+<meta name="date" content="2020-12-11" />
+
+<title>Data wrangling assignment</title>
+
+<script src="site_libs/header-attrs-2.4.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Anderson Monken ANLY503 Portfolio</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Course Assignments
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_wrangling.html">Data Wrangling Assignment</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploratory Data Analysis Assignment</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="task1.html">Task 1</a>
+        </li>
+        <li>
+          <a href="task2.html">Task 2</a>
+        </li>
+        <li>
+          <a href="task3.html">Task 3</a>
+        </li>
+        <li>
+          <a href="task4.html">Task 4</a>
+        </li>
+        <li>
+          <a href="task5.html">Task 5</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="geospatial.html">Choropleth Assignment</a>
+    </li>
+    <li>
+      <a href="network.html">Network Assignment</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="project.html">Final Project</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AndersonMonken/ANLY503_Portfolio">Github</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Data wrangling assignment</h1>
+<h4 class="author">Anderson Monken</h4>
+<h4 class="date">12/11/2020</h4>
+
+</div>
+
+
+<div id="processing-loan-data" class="section level2 tabset">
+<h2 class="tabset">Processing loan data</h2>
+<div id="r" class="section level3">
+<h3>R</h3>
+<pre class="r"><code># Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(janitor)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+loans &lt;- read_csv(&#39;data/loans.csv&#39;)
+
+# clean names
+loans &lt;- loans %&gt;% clean_names()
+
+# pivot to long format so columns names become part of the data
+loans_long &lt;- loans %&gt;% 
+  pivot_longer(cols = starts_with(&#39;x&#39;), 
+               names_to = &quot;loan_type&quot;, 
+               values_to = &quot;loan_dummy&quot;)
+
+# only keep values where the dummy is X 
+# because other values were not the loan type for that id
+loans_long &lt;- loans_long %&gt;% 
+  filter(loan_dummy == &quot;X&quot;) %&gt;% 
+  select(-loan_dummy)
+
+# separate loan_type into appropriate columns
+loans_long_expand &lt;- separate(loans_long, 
+                              loan_type, 
+                              sep = &#39;_&#39;, 
+                              into = c(&#39;loan_term&#39;,&#39;loan_category&#39;)) %&gt;%
+        mutate(loan_status = if_else(loan_category %in% c(&#39;a&#39;,&#39;c&#39;), &quot;current&quot;,&quot;expired&quot;),
+               loan_default = if_else(loan_category %in% c(&#39;b&#39;,&#39;d&#39;), TRUE, FALSE),
+               loan_term = str_sub(loan_term,2) %&gt;% as.numeric()) %&gt;%
+  rename(loan_amount = amount, loan_payments = payments)
+
+loans_long_expand %&gt;% write_csv(&#39;loans_r.csv&#39;)</code></pre>
+</div>
+<div id="python" class="section level3">
+<h3>Python</h3>
+<pre class="python"><code># -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+Created on Sat Oct  3 22:16:25 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+&quot;&quot;&quot;
+
+import os
+import pandas as pd
+
+# os.chdir(r&#39;C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken&#39;)
+
+loans = pd.read_csv(&#39;data/loans.csv&#39;)
+
+# pivot to long format using set index and stack function
+loans_long = loans.set_index([&#39;id&#39;, &#39;account_id&#39;,&#39;date&#39;,&#39;amount&#39;,&#39;payments&#39;]).stack().reset_index().rename(columns = {&#39;level_5&#39; : &#39;loan_type&#39;, 0 : &#39;loan_dummy&#39;})
+
+# only keep data that exists
+loans_long = loans_long[loans_long[&#39;loan_dummy&#39;] == &#39;X&#39;].drop(&#39;loan_dummy&#39;, axis = 1).reset_index(drop = True)
+
+# extract the fields from the loan info and add it to the main dataset
+loans_long = loans_long.join(loans_long[&#39;loan_type&#39;].str.lower().str.extract(r&#39;(?P&lt;loan_term&gt;\d*)_(?P&lt;loan_category&gt;\w)&#39;))
+
+# create the loan_status, loan_default, and loan_term variables
+loans_long[&#39;loan_status&#39;] = loans_long[&#39;loan_category&#39;].apply(lambda x: &#39;current&#39; if x in [&#39;a&#39;,&#39;c&#39;] else &#39;expired&#39;)
+loans_long[&#39;loan_default&#39;] = loans_long[&#39;loan_category&#39;].apply(lambda x: True if x in [&#39;b&#39;,&#39;d&#39;] else False)
+loans_long[&#39;loan_term&#39;] = loans_long[&#39;loan_term&#39;].astype(&#39;int64&#39;)
+
+# rename loan_amount and loan_payments variables and drop loan_type
+loans_long = loans_long.rename(columns = {&#39;amount&#39; : &#39;loan_amount&#39;, &#39;payments&#39; : &#39;loan_payments&#39;}).drop(columns = [&#39;loan_type&#39;])
+
+loans_long.to_csv(&#39;loans_py.csv&#39;, index = False)</code></pre>
+</div>
+</div>
+<div id="processing-district-data" class="section level2 tabset">
+<h2 class="tabset">Processing district data</h2>
+<div id="r-1" class="section level3">
+<h3>R</h3>
+<pre class="r"><code># Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(janitor)
+p_load(skimr)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+districts &lt;- read_csv(&#39;data/districts.csv&#39;)
+
+# take away the brackets from the array columns
+districts &lt;- districts %&gt;% 
+  mutate(across(c(municipality_info, unemployment_rate, commited_crimes), 
+                gsub, pattern = &quot;\\[|\\]&quot;, replacement = &#39;&#39;))
+
+# separate out the array columns into their own individual columns
+districts &lt;- separate(districts, 
+         col = municipality_info, 
+         sep = &#39;,&#39;, 
+         into = c(&quot;num_municip_l_500&quot;, &quot;num_municip_500_2000&quot;,&quot;num_municip_2000_10000&quot;,&quot;num_municip_10000_p&quot;),
+         convert = TRUE)
+  
+districts &lt;- separate(districts, 
+                      col = unemployment_rate, 
+                      sep = &#39;,&#39;, 
+                      into = c(&quot;urate_95&quot;, &quot;urate_96&quot;),
+                      convert = TRUE)
+
+districts &lt;- separate(districts, 
+                      col = commited_crimes, 
+                      sep = &#39;,&#39;, 
+                      into = c(&quot;crime_95&quot;, &quot;crime_96&quot;),
+                      convert = TRUE)
+
+districts %&gt;% write_csv(&#39;districts_r.csv&#39;)</code></pre>
+</div>
+<div id="python-1" class="section level3">
+<h3>Python</h3>
+<pre class="r"><code># -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+Created on Sat Oct  3 22:16:30 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+&quot;&quot;&quot;
+
+import os
+import pandas as pd
+import numpy as np
+
+# os.chdir(r&#39;C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken&#39;)
+
+districts = pd.read_csv(&#39;data/districts.csv&#39;)
+
+# extract array data
+districts = districts.join(districts[&#39;municipality_info&#39;].\
+    str.replace(r&#39;[\[\]]&#39;,&#39;&#39;).\
+    str.split(&#39;,&#39;, expand = True).astype(&#39;int64&#39;).\
+    rename(columns = {0 : &#39;num_municip_l_500&#39;, 1 : &#39;num_municip_500_2000&#39;, 2 : &#39;num_municip_2000_10000&#39;, 3 : &#39;num_municip_10000_p&#39;})).drop(columns = &#39;municipality_info&#39;)
+
+districts = districts.join(districts[&#39;unemployment_rate&#39;].\
+    str.replace(r&#39;[\[\]]&#39;,&#39;&#39;).\
+    str.split(&#39;,&#39;, expand = True).replace(&#39;NA&#39;,np.nan).astype(&#39;float64&#39;).\
+    rename(columns = {0 : &#39;urate_95&#39;, 1 : &#39;urate_96&#39;})).drop(columns = &#39;unemployment_rate&#39;)
+
+districts = districts.join(districts[&#39;commited_crimes&#39;].\
+    str.replace(r&#39;[\[\]]&#39;,&#39;&#39;).\
+    str.split(&#39;,&#39;, expand = True).replace(&#39;NA&#39;,np.nan).astype(&#39;float64&#39;).\
+    rename(columns = {0 : &#39;crime_95&#39;, 1 : &#39;crime_96&#39;})).drop(columns = &#39;commited_crimes&#39;)
+
+districts.to_csv(&#39;districts_py.csv&#39;)
+
+d_r = pd.read_csv(&#39;districts_r.csv&#39;)</code></pre>
+</div>
+</div>
+<div id="processing-customer-data" class="section level2 tabset">
+<h2 class="tabset">Processing customer data</h2>
+<div id="r-2" class="section level3">
+<h3>R</h3>
+<pre class="r"><code># Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(skimr)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+##### read in data -----
+
+ccards &lt;- read_csv(&#39;data/cards.csv&#39;)
+transactions &lt;- read_csv(&#39;data/transactions.csv&#39;)
+links &lt;- read_csv(&#39;data/links.csv&#39;)
+clients &lt;- read_csv(&#39;data/clients.csv&#39;)
+accounts &lt;- read_csv(&#39;data/accounts.csv&#39;)
+districts &lt;- read_csv(&#39;districts_r.csv&#39;)
+loans &lt;- read_csv(&#39;loans_r.csv&#39;)
+payment_orders &lt;- read_csv(&#39;data/payment_orders.csv&#39;)
+
+##### set up the account_id and district_name variables -----
+# use a left join to get the district info for each account then
+# keep the first four variables we need for the final dataset
+accounts_build &lt;- accounts %&gt;% 
+  left_join(districts %&gt;% select(district_name = name, id), by = c(&#39;district_id&#39; = &#39;id&#39;)) %&gt;% 
+  select(account_id = id, district_name, open_date = date, statement_frequency)
+
+##### get client data -----
+
+# join client to link data to get number of clients for each account id
+# then join the count of clients and account id to the main dataset
+client_numbers &lt;- links %&gt;% 
+    group_by(account_id) %&gt;% 
+    tally() %&gt;% 
+    rename(num_customers = n)
+accounts_build &lt;- accounts_build %&gt;% left_join(client_numbers, by = &#39;account_id&#39;)
+
+##### connect credit cards to accounts -------
+
+# count credit cards by link id
+card_count &lt;- ccards %&gt;% 
+  group_by(link_id) %&gt;% 
+  tally() %&gt;% 
+  rename(credit_cards = n) %&gt;% 
+  
+  # join with the links dataset
+  right_join(links %&gt;% rename(link_id = id), by = &#39;link_id&#39;) %&gt;%
+  
+  # count credit cards by account_id
+  group_by(account_id) %&gt;%
+  dplyr::summarise(credit_cards = sum(credit_cards, na.rm = TRUE)) %&gt;% 
+  
+  # make missing credit cards count to be 0
+  mutate(credit_cards = if_else(is.na(credit_cards), 0, as.numeric(credit_cards)))
+
+accounts_build &lt;- accounts_build %&gt;% left_join(card_count, by = &#39;account_id&#39;)
+
+##### connect loan data to accounts
+
+accounts_build &lt;- accounts_build %&gt;% 
+  # join loan data to the account data
+  left_join(loans %&gt;% select(-date, -loan_category), by = &#39;account_id&#39;) %&gt;% 
+  # make a loan variable dummy if there is a loan id or not
+  mutate(loan = if_else(is.na(id), FALSE, TRUE)) %&gt;%
+  # drop id variable
+  select(-id) %&gt;%
+  # rearrange variables for final ordering
+  select(account_id, district_name, open_date, statement_frequency, 
+  num_customers, credit_cards, loan, starts_with(&#39;loan_&#39;))
+
+
+##### transaction data to accounts -----
+
+# get the max/min withdrawals
+withdrawal_data &lt;- transactions %&gt;% 
+  # filter to only withdrawals
+  # there are some negative balance charges that are 0 so those don&#39;t really count as withdrawals
+  filter(type == &#39;debit&#39;, amount &gt; 0) %&gt;%
+  group_by(account_id) %&gt;%
+  summarize(max_withdrawal = max(amount),
+            min_withdrawal = min(amount))
+
+accounts_build &lt;- accounts_build %&gt;% left_join(withdrawal_data, by = &quot;account_id&quot;)
+  
+# get number of credit payments
+cc_payment_count_data &lt;- transactions %&gt;% 
+  filter(method == &#39;credit card&#39;, type == &#39;debit&#39;) %&gt;%
+  group_by(account_id) %&gt;%
+  tally() %&gt;%
+  rename(cc_payments = n)
+
+# join onto full table and replace missings with 0
+accounts_build &lt;- accounts_build %&gt;% 
+  left_join(cc_payment_count_data, by = &quot;account_id&quot;) %&gt;%
+   mutate(cc_payments = if_else(is.na(cc_payments), 0, as.numeric(cc_payments)))
+
+# get balance extremes
+balance_data &lt;- transactions %&gt;% 
+  group_by(account_id) %&gt;%
+  summarize(max_balance = max(balance),
+            min_balance = min(balance))
+
+accounts_build &lt;- accounts_build %&gt;% left_join(balance_data, by = &quot;account_id&quot;)
+
+#skim(accounts_build)
+
+write_csv(accounts_build, &#39;customers_r.csv&#39;)</code></pre>
+</div>
+<div id="python-2" class="section level3">
+<h3>Python</h3>
+<pre class="python"><code># -*- coding: utf-8 -*-
+&quot;&quot;&quot;
+Created on Sat Oct  3 22:16:12 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+&quot;&quot;&quot;
+
+import os
+import pandas as pd
+
+# os.chdir(r&#39;C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken&#39;)
+
+# read in all the data
+districts = pd.read_csv(&#39;districts_py.csv&#39;)
+loans = pd.read_csv(&#39;loans_py.csv&#39;)
+accounts = pd.read_csv(&#39;data/accounts.csv&#39;)
+clients = pd.read_csv(&#39;data/clients.csv&#39;)
+links = pd.read_csv(&#39;data/links.csv&#39;)
+transactions = pd.read_csv(&#39;data/transactions.csv&#39;)
+ccards = pd.read_csv(&#39;data/cards.csv&#39;)
+
+
+# prep the main dataset and get the account_id and district_name variables
+accounts_build = (accounts.merge(districts.
+                                 rename(columns = {&#39;name&#39; : &#39;district_name&#39;, &#39;id&#39; : &#39;district_id&#39;})
+                                 [[&#39;district_name&#39;,&#39;district_id&#39;]], 
+                                how = &#39;left&#39;,
+                                on = &#39;district_id&#39;).
+        rename(columns = {&#39;id&#39; : &#39;account_id&#39;, &#39;date&#39; : &#39;open_date&#39;})
+        [[&#39;account_id&#39;,&#39;district_name&#39;,&#39;open_date&#39;,&#39;statement_frequency&#39;]].
+        sort_values([&#39;account_id&#39;]).
+        reset_index(drop = True))
+        
+        
+# get number of customers for accounts
+client_data = links.groupby(&#39;account_id&#39;)[&#39;client_id&#39;].count().to_frame().reset_index().rename(columns = {&#39;client_id&#39; : &#39;num_customers&#39;})
+accounts_build = accounts_build.merge(client_data,
+                    how = &#39;left&#39;,
+                    on = &#39;account_id&#39;)
+
+
+# get number of credit cards per account
+card_count_data = (ccards.groupby(&#39;link_id&#39;)[&#39;id&#39;].count().to_frame().reset_index(). # get count of cards by link id
+    rename(columns = {&#39;id&#39; : &#39;credit_cards&#39;, &#39;link_id&#39; : &#39;id&#39;}). # rename columns for better merging
+        merge(links, how = &#39;right&#39;). # merge with link df
+            groupby(&#39;account_id&#39;)[&#39;credit_cards&#39;].count().to_frame().reset_index()) # get card count by account id
+
+accounts_build = accounts_build.merge(card_count_data,
+                                      how = &#39;left&#39;,
+                                      on = &#39;account_id&#39;)
+
+
+# add loan data to accounts dataframe
+accounts_build = (accounts_build.merge(loans.drop([&#39;date&#39;,&#39;loan_category&#39;], axis = 1),
+                     how = &#39;left&#39;,
+                     on = &#39;account_id&#39;)
+)
+
+accounts_build[&#39;id&#39;] = accounts_build.id.apply(lambda x: False if pd.isna(x) else True)
+accounts_build = accounts_build.rename(columns = {&#39;id&#39; : &#39;loan&#39;})
+
+
+# get withdrawal data for accounts
+withdrawal_data = (transactions[(transactions.type == &#39;debit&#39;) &amp; (transactions.amount &gt; 0)].
+    groupby(&#39;account_id&#39;).amount.
+    agg([max,min]).reset_index().
+    rename(columns = {&#39;max&#39; : &#39;max_withdrawal&#39;, &#39;min&#39; : &#39;min_withdrawal&#39;})) 
+
+accounts_build = accounts_build.merge(withdrawal_data,
+                                      how = &#39;left&#39;,
+                                      on = &#39;account_id&#39;)
+
+# get number of credit card payments
+cc_data = (transactions[(transactions.type == &#39;debit&#39;) &amp; (transactions.method == &#39;credit card&#39;)].
+           groupby(&#39;account_id&#39;)[&#39;id&#39;].
+           count().to_frame().reset_index().
+           rename(columns = {&#39;id&#39; : &#39;cc_payments&#39;}))
+
+accounts_build = accounts_build.merge(cc_data,
+                                      how = &#39;left&#39;,
+                                      on = &#39;account_id&#39;)
+accounts_build[&#39;cc_payments&#39;] = (accounts_build[&#39;cc_payments&#39;].
+                                    apply(lambda x: 0 if pd.isna(x) else x))
+
+# get high and low balances
+balance_data = (transactions.
+                groupby(&#39;account_id&#39;)[&#39;balance&#39;].
+                agg([max, min]).
+                rename(columns = {&#39;max&#39; : &#39;max_balance&#39;,&#39;min&#39; : &#39;min_balance&#39;}).
+                reset_index())
+
+accounts_build = accounts_build.merge(balance_data,
+                                      how = &#39;left&#39;,
+                                      on = &#39;account_id&#39;)
+
+# output final dataset
+accounts_build = accounts_build.sort_values([&#39;account_id&#39;]).reset_index(drop = True)
+accounts_build.to_csv(&#39;customers_py.csv&#39;)
+
+# confirm that R and python data are the same!
+# data_r = pd.read_csv(&#39;customers_r.csv&#39;).sort_values([&#39;account_id&#39;]).reset_index(drop = True)
+
+# for i in range(accounts_build.shape[0]):
+#     if not all((data_r.loc[i,:] == accounts_build.loc[i,:]) | (pd.isna(data_r.loc[i,:]) &amp; pd.isna(data_r.loc[i,:]))):
+#         print(data_r.loc[i,:])
+#         print(accounts_build.loc[i,:])</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

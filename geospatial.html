@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Anderson Monken" />
+
+
+<title>Assignment 6</title>
+
+<script src="site_libs/header-attrs-2.4.6/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Anderson Monken ANLY503 Portfolio</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Course Assignments
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="data_wrangling.html">Data Wrangling Assignment</a>
+    </li>
+    <li class="dropdown-submenu">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploratory Data Analysis Assignment</a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="task1.html">Task 1</a>
+        </li>
+        <li>
+          <a href="task2.html">Task 2</a>
+        </li>
+        <li>
+          <a href="task3.html">Task 3</a>
+        </li>
+        <li>
+          <a href="task4.html">Task 4</a>
+        </li>
+        <li>
+          <a href="task5.html">Task 5</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="geospatial.html">Choropleth Assignment</a>
+    </li>
+    <li>
+      <a href="network.html">Network Assignment</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="project.html">Final Project</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/AndersonMonken/ANLY503_Portfolio">Github</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Assignment 6</h1>
+<h4 class="author">Anderson Monken</h4>
+<h4 class="date">11/7/2020</h4>
+
+</div>
+
+
+<div id="read-in-raw-data-files-in-python-then-bring-into-r" class="section level3">
+<h3>Read in raw data files in Python then bring into R</h3>
+<p>Process the raw data in python and make it into a joinable dataset for R</p>
+<pre class="python"><code>import os
+import pandas as pd
+
+#os.chdir(r&#39;C:\Users\Monke\Documents\GitHub\anly503-fall2020-a6-AndersonMonken&#39;)
+
+# read in data
+df_raw = pd.read_csv(&#39;data/countypres_2000-2016.csv&#39;)
+
+# restrict to only years 2008 onwards
+df_raw = df_raw[df_raw.year &gt;= 2008]
+
+# remove any rows without FIPS codes
+df_raw = df_raw[~ pd.isna(df_raw.FIPS)]
+
+# make variable for proportion of vote for democrats!!
+df_raw = df_raw[df_raw.party == &#39;democrat&#39;]
+df_raw[&#39;dem_prop_votes&#39;] = df_raw.candidatevotes / df_raw.totalvotes
+
+# fix FIPS code so its always 5 digits
+df_raw[&#39;FIPS&#39;] = df_raw.FIPS.astype(&#39;int&#39;).astype(&#39;str&#39;).str.pad(width = 5, side = &#39;left&#39;, fillchar = &#39;0&#39;)
+
+# set up the final election dataframe, dropping unnecessary variables
+df_elections = df_raw.drop(columns = [&#39;party&#39;,&#39;candidate&#39;,&#39;office&#39;,&#39;version&#39;,&#39;candidatevotes&#39;,&#39;totalvotes&#39;]).reset_index(drop = True)
+
+# read in data
+df_raw = pd.read_excel(&#39;data/Unemployment.xls&#39;,header = 7)
+
+# keep only the variables we need
+df_raw = df_raw[[&#39;FIPStxt&#39;,&#39;Stabr&#39;,&#39;area_name&#39;,&#39;Unemployment_rate_2016&#39;,&#39;Unemployment_rate_2012&#39;,&#39;Unemployment_rate_2008&#39;]]
+
+# process the FIPS code so it is padded with zeros
+df_raw[&#39;FIPStxt&#39;] = df_raw.FIPStxt.astype(&#39;str&#39;).str.pad(width = 5, side = &#39;left&#39;, fillchar = &#39;0&#39;)
+
+# stack the data (wide to long) so it will be easier to filter later on
+df_urate = df_raw.set_index([&#39;FIPStxt&#39;,&#39;Stabr&#39;,&#39;area_name&#39;]).stack().reset_index()
+
+# rename variables
+df_urate = df_urate.rename(columns = {0 : &#39;urate&#39;, &#39;level_3&#39; : &#39;year&#39;, &#39;FIPStxt&#39; : &#39;FIPS&#39;})
+
+# set the year variable
+df_urate[&#39;year&#39;] = df_urate.year.str.slice(-4).astype(&#39;int&#39;)</code></pre>
+<pre class="r"><code>df_urate &lt;- py$df_urate
+df_elections &lt;- py$df_elections</code></pre>
+</div>
+<div id="shapefile-processing-and-merging-data" class="section level3">
+<h3>Shapefile processing and merging data</h3>
+<p>We read in the county shape files. The GEOID variable already includes the concatentation of STATEFP and COUNTYFP, so no new variable is needed. We transform the data into crs 2163 projection to make the US look nicer.</p>
+<pre class="r"><code># read in the data using the sf package
+# the function st_read makes a complex dataframe
+countymap &lt;- st_read(dsn = &quot;data/shape_files&quot;, 
+                     layer = &quot;tl_2019_us_county&quot;) %&gt;%
+  st_transform(crs = 2163)</code></pre>
+<pre><code>## Reading layer `tl_2019_us_county&#39; from data source `C:\Users\Monke\Documents\GitHub\ANLY503_Portfolio\data\shape_files&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 3233 features and 17 fields
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -179.2311 ymin: -14.60181 xmax: 179.8597 ymax: 71.43979
+## geographic CRS: NAD83</code></pre>
+</div>
+<div id="plotting-the-six-choropleths" class="section level3 tabset">
+<h3 class="tabset">Plotting the six choropleths</h3>
+<p>I write a function that takes in a variable type and a year, and returns the appropriate map plot.</p>
+<pre class="r"><code>map_func &lt;- function(variable_type, year){
+  
+  if (variable_type == &#39;urate&#39;) {
+    plot_data &lt;- df_urate %&gt;% rename(value = urate) %&gt;% filter(year == year) %&gt;% full_join(countymap, by = c(&#39;FIPS&#39; = &#39;GEOID&#39;))
+    plot_title &lt;- paste(&#39;Choropleth of county-level unemployment rate in&#39;,year)
+    legend_title &lt;- &#39;Unemployment rate&#39;
+  } else if (variable_type == &#39;vote&#39;){
+        plot_data &lt;- df_elections %&gt;% rename(value = dem_prop_votes) %&gt;% filter(year == year) %&gt;% full_join(countymap, by = c(&#39;FIPS&#39; = &#39;GEOID&#39;))
+    plot_title &lt;- paste(&#39;Choropleth of county-level Democratic vote percentage for the&#39;,year,&#39;election&#39;)
+    legend_title &lt;- &#39;Democratic vote percentage&#39;
+  }
+  
+  ggplot(data = plot_data) + 
+    geom_sf(aes(geometry = geometry, 
+                 fill = value), 
+                 color = NA) +
+    
+    coord_sf(crs = st_crs(2163),
+             xlim = c(-2200000, 2500000), 
+             ylim = c(-2300000, 730000)) +
+    
+    # plot title
+    ggtitle(plot_title) +
+    
+    # legend title
+    scale_fill_viridis_c(name = legend_title) + 
+    
+    # theme remove plot background
+    theme(panel.background = element_blank())
+}</code></pre>
+<p>We ran the function six times to get our nice choropleth outputs. You can see the output ordered by year or map type below.</p>
+<pre class="r"><code>output_maps &lt;- list()
+output_maps[[&#39;u1&#39;]] &lt;- map_func(&#39;urate&#39;,2008)
+output_maps[[&#39;v1&#39;]] &lt;- map_func(&#39;vote&#39;,2008)
+output_maps[[&#39;u2&#39;]] &lt;- map_func(&#39;urate&#39;,2012)
+output_maps[[&#39;v2&#39;]] &lt;- map_func(&#39;vote&#39;,2012)
+output_maps[[&#39;u3&#39;]] &lt;- map_func(&#39;urate&#39;,2016)
+output_maps[[&#39;v3&#39;]] &lt;- map_func(&#39;vote&#39;,2016)</code></pre>
+</div>
+<div id="year-separated-maps" class="section level3 tabset">
+<h3 class="tabset">Year-separated maps</h3>
+<div id="section" class="section level4">
+<h4>2008</h4>
+<pre class="r"><code>output_maps[[&#39;u1&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;v1&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+</div>
+<div id="section-1" class="section level4">
+<h4>2012</h4>
+<pre class="r"><code>output_maps[[&#39;u2&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;v2&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+</div>
+<div id="section-2" class="section level4">
+<h4>2016</h4>
+<pre class="r"><code>output_maps[[&#39;u3&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;v3&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+</div>
+</div>
+<div id="variable-separated-maps" class="section level3 tabset">
+<h3 class="tabset">Variable-separated maps</h3>
+<div id="unemployment-rate" class="section level4">
+<h4>Unemployment Rate</h4>
+<pre class="r"><code>output_maps[[&#39;u1&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;u2&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;u3&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+</div>
+<div id="democratic-election-vote" class="section level4">
+<h4>Democratic Election Vote</h4>
+<pre class="r"><code>output_maps[[&#39;v1&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;v2&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<pre class="r"><code>output_maps[[&#39;v3&#39;]]</code></pre>
+<p><img src="geospatial_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

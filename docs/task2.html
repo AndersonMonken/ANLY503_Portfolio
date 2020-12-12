@@ -18,12 +18,12 @@
 <script src="site_libs/header-attrs-2.4.6/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
 <script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
@@ -294,13 +294,6 @@ $(document).ready(function () {
     Home
   </a>
 </li>
-<li>
-  <a href="about.html">
-    <span class="fa fa-info"></span>
-     
-    About
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Course Assignments
@@ -308,11 +301,8 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data Wrangling Assignment</a>
-      <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header"></li>
-      </ul>
+    <li>
+      <a href="data_wrangling.html">Data Wrangling Assignment</a>
     </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploratory Data Analysis Assignment</a>
@@ -390,39 +380,29 @@ accounts_data_monthly = accounts_data[accounts_data[&#39;loan_default&#39;] == T
 accounts_data_monthly[&#39;loan_date&#39;] = pd.PeriodIndex(accounts_data_monthly.loan_monthly).to_timestamp()</code></pre>
 <p>The first plot shows the distribution of loan amounts</p>
 <pre class="python"><code>ax = sns.displot(accounts_data, x=&quot;loan_amount&quot;)
-plt.title(&quot;Distribution of loan amounts&quot;)</code></pre>
-<pre><code>## Text(0.5, 1.0, &#39;Distribution of loan amounts&#39;)</code></pre>
-<pre class="python"><code>plt.ylabel(&#39;Count&#39;)</code></pre>
-<pre><code>## Text(4.944444444444445, 0.5, &#39;Count&#39;)</code></pre>
-<pre class="python"><code>plt.xlabel(&#39;Loan amount&#39;)</code></pre>
-<pre><code>## Text(0.5, 9.444444444444438, &#39;Loan amount&#39;)</code></pre>
-<pre class="python"><code>plt.tight_layout()
+plt.title(&quot;Distribution of loan amounts&quot;)
+plt.ylabel(&#39;Count&#39;)
+plt.xlabel(&#39;Loan amount&#39;)
+plt.tight_layout()
 plt.show()</code></pre>
 <p><img src="task2_files/figure-html/unnamed-chunk-2-1.png" width="480" /></p>
 <p>The next plot considers whether current or past loans are bigger. This will show whether the bank is taking on larger or smaller loans now.</p>
 <pre class="python"><code>
 ax = sns.displot(accounts_data, x=&quot;loan_amount&quot;, hue=&quot;loan_status&quot;, element=&quot;step&quot;)
-plt.title(&quot;Distribution of loan amounts colored by loan status&quot;)</code></pre>
-<pre><code>## Text(0.5, 1.0, &#39;Distribution of loan amounts colored by loan status&#39;)</code></pre>
-<pre class="python"><code>plt.ylabel(&#39;count&#39;)</code></pre>
-<pre><code>## Text(23.38798958333333, 0.5, &#39;count&#39;)</code></pre>
-<pre class="python"><code>plt.xlabel(&#39;Loan amount&#39;)</code></pre>
-<pre><code>## Text(0.5, 9.444444444444438, &#39;Loan amount&#39;)</code></pre>
-<pre class="python"><code>plt.tight_layout()
+plt.title(&quot;Distribution of loan amounts colored by loan status&quot;)
+plt.ylabel(&#39;count&#39;)
+plt.xlabel(&#39;Loan amount&#39;)
+plt.tight_layout()
 plt.show()</code></pre>
 <p><img src="task2_files/figure-html/unnamed-chunk-3-1.png" width="578" /></p>
 <p>The next plot considers how the total loan origination has changed over time. The monthly time series plot shows the total loans given out. We see that there were three broad spikes in defaults in 1994, 1996, and 1997.</p>
 <pre class="python"><code>fig, ax = plt.subplots()
 sns.set_style(&quot;ticks&quot;)
-sns.lineplot(data=accounts_data_monthly,x=&quot;loan_date&quot;, y=&quot;loan_amount&quot;, ax=ax)</code></pre>
-<pre><code>## &lt;matplotlib.axes._subplots.AxesSubplot object at 0x00000000DC34B790&gt;</code></pre>
-<pre class="python"><code>plt.title(&quot;Monthly time series total loan amount&quot;)</code></pre>
-<pre><code>## Text(0.5, 1.0, &#39;Monthly time series total loan amount&#39;)</code></pre>
-<pre class="python"><code>plt.ylabel(&quot;total loan amount&quot;)</code></pre>
-<pre><code>## Text(0, 0.5, &#39;total loan amount&#39;)</code></pre>
-<pre class="python"><code>plt.xlabel(&quot;&quot;)</code></pre>
-<pre><code>## Text(0.5, 0, &#39;&#39;)</code></pre>
-<pre class="python"><code>plt.show()</code></pre>
+sns.lineplot(data=accounts_data_monthly,x=&quot;loan_date&quot;, y=&quot;loan_amount&quot;, ax=ax)
+plt.title(&quot;Monthly time series total loan amount&quot;)
+plt.ylabel(&quot;total loan amount&quot;)
+plt.xlabel(&quot;&quot;)
+plt.show()</code></pre>
 <p><img src="task2_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 
 

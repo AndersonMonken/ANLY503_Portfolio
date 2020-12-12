@@ -1,0 +1,409 @@
+---
+title: "Data wrangling assignment"
+author: "Anderson Monken"
+date: "12/11/2020"
+output: html_document
+---
+
+## Processing loan data {.tabset}
+
+### R
+
+```{r, eval = FALSE}
+# Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(janitor)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+loans <- read_csv('data/loans.csv')
+
+# clean names
+loans <- loans %>% clean_names()
+
+# pivot to long format so columns names become part of the data
+loans_long <- loans %>% 
+  pivot_longer(cols = starts_with('x'), 
+               names_to = "loan_type", 
+               values_to = "loan_dummy")
+
+# only keep values where the dummy is X 
+# because other values were not the loan type for that id
+loans_long <- loans_long %>% 
+  filter(loan_dummy == "X") %>% 
+  select(-loan_dummy)
+
+# separate loan_type into appropriate columns
+loans_long_expand <- separate(loans_long, 
+                              loan_type, 
+                              sep = '_', 
+                              into = c('loan_term','loan_category')) %>%
+        mutate(loan_status = if_else(loan_category %in% c('a','c'), "current","expired"),
+               loan_default = if_else(loan_category %in% c('b','d'), TRUE, FALSE),
+               loan_term = str_sub(loan_term,2) %>% as.numeric()) %>%
+  rename(loan_amount = amount, loan_payments = payments)
+
+loans_long_expand %>% write_csv('loans_r.csv')
+```
+
+### Python
+
+```{python, eval = FALSE}
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct  3 22:16:25 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+"""
+
+import os
+import pandas as pd
+
+# os.chdir(r'C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken')
+
+loans = pd.read_csv('data/loans.csv')
+
+# pivot to long format using set index and stack function
+loans_long = loans.set_index(['id', 'account_id','date','amount','payments']).stack().reset_index().rename(columns = {'level_5' : 'loan_type', 0 : 'loan_dummy'})
+
+# only keep data that exists
+loans_long = loans_long[loans_long['loan_dummy'] == 'X'].drop('loan_dummy', axis = 1).reset_index(drop = True)
+
+# extract the fields from the loan info and add it to the main dataset
+loans_long = loans_long.join(loans_long['loan_type'].str.lower().str.extract(r'(?P<loan_term>\d*)_(?P<loan_category>\w)'))
+
+# create the loan_status, loan_default, and loan_term variables
+loans_long['loan_status'] = loans_long['loan_category'].apply(lambda x: 'current' if x in ['a','c'] else 'expired')
+loans_long['loan_default'] = loans_long['loan_category'].apply(lambda x: True if x in ['b','d'] else False)
+loans_long['loan_term'] = loans_long['loan_term'].astype('int64')
+
+# rename loan_amount and loan_payments variables and drop loan_type
+loans_long = loans_long.rename(columns = {'amount' : 'loan_amount', 'payments' : 'loan_payments'}).drop(columns = ['loan_type'])
+
+loans_long.to_csv('loans_py.csv', index = False)
+```
+
+## Processing district data {.tabset}
+
+### R
+
+```{r, eval = FALSE}
+# Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(janitor)
+p_load(skimr)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+districts <- read_csv('data/districts.csv')
+
+# take away the brackets from the array columns
+districts <- districts %>% 
+  mutate(across(c(municipality_info, unemployment_rate, commited_crimes), 
+                gsub, pattern = "\\[|\\]", replacement = ''))
+
+# separate out the array columns into their own individual columns
+districts <- separate(districts, 
+         col = municipality_info, 
+         sep = ',', 
+         into = c("num_municip_l_500", "num_municip_500_2000","num_municip_2000_10000","num_municip_10000_p"),
+         convert = TRUE)
+  
+districts <- separate(districts, 
+                      col = unemployment_rate, 
+                      sep = ',', 
+                      into = c("urate_95", "urate_96"),
+                      convert = TRUE)
+
+districts <- separate(districts, 
+                      col = commited_crimes, 
+                      sep = ',', 
+                      into = c("crime_95", "crime_96"),
+                      convert = TRUE)
+
+districts %>% write_csv('districts_r.csv')
+```
+
+### Python
+
+```{r, eval = FALSE}
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct  3 22:16:30 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+"""
+
+import os
+import pandas as pd
+import numpy as np
+
+# os.chdir(r'C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken')
+
+districts = pd.read_csv('data/districts.csv')
+
+# extract array data
+districts = districts.join(districts['municipality_info'].\
+    str.replace(r'[\[\]]','').\
+    str.split(',', expand = True).astype('int64').\
+    rename(columns = {0 : 'num_municip_l_500', 1 : 'num_municip_500_2000', 2 : 'num_municip_2000_10000', 3 : 'num_municip_10000_p'})).drop(columns = 'municipality_info')
+
+districts = districts.join(districts['unemployment_rate'].\
+    str.replace(r'[\[\]]','').\
+    str.split(',', expand = True).replace('NA',np.nan).astype('float64').\
+    rename(columns = {0 : 'urate_95', 1 : 'urate_96'})).drop(columns = 'unemployment_rate')
+
+districts = districts.join(districts['commited_crimes'].\
+    str.replace(r'[\[\]]','').\
+    str.split(',', expand = True).replace('NA',np.nan).astype('float64').\
+    rename(columns = {0 : 'crime_95', 1 : 'crime_96'})).drop(columns = 'commited_crimes')
+
+districts.to_csv('districts_py.csv')
+
+d_r = pd.read_csv('districts_r.csv')
+```
+
+## Processing customer data {.tabset}
+
+### R
+
+```{r, eval = FALSE}
+# Anderson Monken
+# ANLY503
+# Fall 2020
+# October 9, 2020
+
+
+library(pacman)
+p_load(tidyverse)
+p_load(skimr)
+
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+##### read in data -----
+
+ccards <- read_csv('data/cards.csv')
+transactions <- read_csv('data/transactions.csv')
+links <- read_csv('data/links.csv')
+clients <- read_csv('data/clients.csv')
+accounts <- read_csv('data/accounts.csv')
+districts <- read_csv('districts_r.csv')
+loans <- read_csv('loans_r.csv')
+payment_orders <- read_csv('data/payment_orders.csv')
+
+##### set up the account_id and district_name variables -----
+# use a left join to get the district info for each account then
+# keep the first four variables we need for the final dataset
+accounts_build <- accounts %>% 
+  left_join(districts %>% select(district_name = name, id), by = c('district_id' = 'id')) %>% 
+  select(account_id = id, district_name, open_date = date, statement_frequency)
+
+##### get client data -----
+
+# join client to link data to get number of clients for each account id
+# then join the count of clients and account id to the main dataset
+client_numbers <- links %>% 
+    group_by(account_id) %>% 
+    tally() %>% 
+    rename(num_customers = n)
+accounts_build <- accounts_build %>% left_join(client_numbers, by = 'account_id')
+
+##### connect credit cards to accounts -------
+
+# count credit cards by link id
+card_count <- ccards %>% 
+  group_by(link_id) %>% 
+  tally() %>% 
+  rename(credit_cards = n) %>% 
+  
+  # join with the links dataset
+  right_join(links %>% rename(link_id = id), by = 'link_id') %>%
+  
+  # count credit cards by account_id
+  group_by(account_id) %>%
+  dplyr::summarise(credit_cards = sum(credit_cards, na.rm = TRUE)) %>% 
+  
+  # make missing credit cards count to be 0
+  mutate(credit_cards = if_else(is.na(credit_cards), 0, as.numeric(credit_cards)))
+
+accounts_build <- accounts_build %>% left_join(card_count, by = 'account_id')
+
+##### connect loan data to accounts
+
+accounts_build <- accounts_build %>% 
+  # join loan data to the account data
+  left_join(loans %>% select(-date, -loan_category), by = 'account_id') %>% 
+  # make a loan variable dummy if there is a loan id or not
+  mutate(loan = if_else(is.na(id), FALSE, TRUE)) %>%
+  # drop id variable
+  select(-id) %>%
+  # rearrange variables for final ordering
+  select(account_id, district_name, open_date, statement_frequency, 
+  num_customers, credit_cards, loan, starts_with('loan_'))
+
+
+##### transaction data to accounts -----
+
+# get the max/min withdrawals
+withdrawal_data <- transactions %>% 
+  # filter to only withdrawals
+  # there are some negative balance charges that are 0 so those don't really count as withdrawals
+  filter(type == 'debit', amount > 0) %>%
+  group_by(account_id) %>%
+  summarize(max_withdrawal = max(amount),
+            min_withdrawal = min(amount))
+
+accounts_build <- accounts_build %>% left_join(withdrawal_data, by = "account_id")
+  
+# get number of credit payments
+cc_payment_count_data <- transactions %>% 
+  filter(method == 'credit card', type == 'debit') %>%
+  group_by(account_id) %>%
+  tally() %>%
+  rename(cc_payments = n)
+
+# join onto full table and replace missings with 0
+accounts_build <- accounts_build %>% 
+  left_join(cc_payment_count_data, by = "account_id") %>%
+   mutate(cc_payments = if_else(is.na(cc_payments), 0, as.numeric(cc_payments)))
+
+# get balance extremes
+balance_data <- transactions %>% 
+  group_by(account_id) %>%
+  summarize(max_balance = max(balance),
+            min_balance = min(balance))
+
+accounts_build <- accounts_build %>% left_join(balance_data, by = "account_id")
+
+#skim(accounts_build)
+
+write_csv(accounts_build, 'customers_r.csv')
+```
+
+### Python
+
+```{python, eval = FALSE}
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct  3 22:16:12 2020
+
+ANLY503 Assignment 4
+@author: Anderson Monken
+"""
+
+import os
+import pandas as pd
+
+# os.chdir(r'C:\Users\Monke\Documents\GitHub\anly503-fall2020-a4-AndersonMonken')
+
+# read in all the data
+districts = pd.read_csv('districts_py.csv')
+loans = pd.read_csv('loans_py.csv')
+accounts = pd.read_csv('data/accounts.csv')
+clients = pd.read_csv('data/clients.csv')
+links = pd.read_csv('data/links.csv')
+transactions = pd.read_csv('data/transactions.csv')
+ccards = pd.read_csv('data/cards.csv')
+
+
+# prep the main dataset and get the account_id and district_name variables
+accounts_build = (accounts.merge(districts.
+                                 rename(columns = {'name' : 'district_name', 'id' : 'district_id'})
+                                 [['district_name','district_id']], 
+                                how = 'left',
+                                on = 'district_id').
+        rename(columns = {'id' : 'account_id', 'date' : 'open_date'})
+        [['account_id','district_name','open_date','statement_frequency']].
+        sort_values(['account_id']).
+        reset_index(drop = True))
+        
+        
+# get number of customers for accounts
+client_data = links.groupby('account_id')['client_id'].count().to_frame().reset_index().rename(columns = {'client_id' : 'num_customers'})
+accounts_build = accounts_build.merge(client_data,
+                    how = 'left',
+                    on = 'account_id')
+
+
+# get number of credit cards per account
+card_count_data = (ccards.groupby('link_id')['id'].count().to_frame().reset_index(). # get count of cards by link id
+    rename(columns = {'id' : 'credit_cards', 'link_id' : 'id'}). # rename columns for better merging
+        merge(links, how = 'right'). # merge with link df
+            groupby('account_id')['credit_cards'].count().to_frame().reset_index()) # get card count by account id
+
+accounts_build = accounts_build.merge(card_count_data,
+                                      how = 'left',
+                                      on = 'account_id')
+
+
+# add loan data to accounts dataframe
+accounts_build = (accounts_build.merge(loans.drop(['date','loan_category'], axis = 1),
+                     how = 'left',
+                     on = 'account_id')
+)
+
+accounts_build['id'] = accounts_build.id.apply(lambda x: False if pd.isna(x) else True)
+accounts_build = accounts_build.rename(columns = {'id' : 'loan'})
+
+
+# get withdrawal data for accounts
+withdrawal_data = (transactions[(transactions.type == 'debit') & (transactions.amount > 0)].
+    groupby('account_id').amount.
+    agg([max,min]).reset_index().
+    rename(columns = {'max' : 'max_withdrawal', 'min' : 'min_withdrawal'})) 
+
+accounts_build = accounts_build.merge(withdrawal_data,
+                                      how = 'left',
+                                      on = 'account_id')
+
+# get number of credit card payments
+cc_data = (transactions[(transactions.type == 'debit') & (transactions.method == 'credit card')].
+           groupby('account_id')['id'].
+           count().to_frame().reset_index().
+           rename(columns = {'id' : 'cc_payments'}))
+
+accounts_build = accounts_build.merge(cc_data,
+                                      how = 'left',
+                                      on = 'account_id')
+accounts_build['cc_payments'] = (accounts_build['cc_payments'].
+                                    apply(lambda x: 0 if pd.isna(x) else x))
+
+# get high and low balances
+balance_data = (transactions.
+                groupby('account_id')['balance'].
+                agg([max, min]).
+                rename(columns = {'max' : 'max_balance','min' : 'min_balance'}).
+                reset_index())
+
+accounts_build = accounts_build.merge(balance_data,
+                                      how = 'left',
+                                      on = 'account_id')
+
+# output final dataset
+accounts_build = accounts_build.sort_values(['account_id']).reset_index(drop = True)
+accounts_build.to_csv('customers_py.csv')
+
+# confirm that R and python data are the same!
+# data_r = pd.read_csv('customers_r.csv').sort_values(['account_id']).reset_index(drop = True)
+
+# for i in range(accounts_build.shape[0]):
+#     if not all((data_r.loc[i,:] == accounts_build.loc[i,:]) | (pd.isna(data_r.loc[i,:]) & pd.isna(data_r.loc[i,:]))):
+#         print(data_r.loc[i,:])
+#         print(accounts_build.loc[i,:])
+```

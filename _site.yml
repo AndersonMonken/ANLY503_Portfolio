@@ -6,14 +6,10 @@ navbar:
     - text: "Home"
       icon: fa-home
       href: index.html
-    - text: "About"
-      icon: fa-info
-      href: about.html
     - text: "Course Assignments"
       menu:
       - text: "Data Wrangling Assignment"
-        menu: 
-        - text: ""
+        href: data_wrangling.html
       - text: "Exploratory Data Analysis Assignment"
         menu:
         - text: "Task 1"
@@ -35,7 +31,6 @@ navbar:
   right:
     - text: "Github"
       href: https://github.com/AndersonMonken/ANLY503_Portfolio
-      
 output:
   html_document:
     theme: cosmo

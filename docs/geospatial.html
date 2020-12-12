@@ -293,13 +293,6 @@ $(document).ready(function () {
     Home
   </a>
 </li>
-<li>
-  <a href="about.html">
-    <span class="fa fa-info"></span>
-     
-    About
-  </a>
-</li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
     Course Assignments
@@ -307,11 +300,8 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-submenu">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Data Wrangling Assignment</a>
-      <ul class="dropdown-menu" role="menu">
-        <li class="dropdown-header"></li>
-      </ul>
+    <li>
+      <a href="data_wrangling.html">Data Wrangling Assignment</a>
     </li>
     <li class="dropdown-submenu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Exploratory Data Analysis Assignment</a>
@@ -420,7 +410,7 @@ df_elections &lt;- py$df_elections</code></pre>
 countymap &lt;- st_read(dsn = &quot;data/shape_files&quot;, 
                      layer = &quot;tl_2019_us_county&quot;) %&gt;%
   st_transform(crs = 2163)</code></pre>
-<pre><code>## Reading layer `tl_2019_us_county&#39; from data source `C:\Users\Monke\Documents\ANLY503_Portfolio\data\shape_files&#39; using driver `ESRI Shapefile&#39;
+<pre><code>## Reading layer `tl_2019_us_county&#39; from data source `C:\Users\Monke\Documents\GitHub\ANLY503_Portfolio\data\shape_files&#39; using driver `ESRI Shapefile&#39;
 ## Simple feature collection with 3233 features and 17 fields
 ## geometry type:  MULTIPOLYGON
 ## dimension:      XY
